@@ -1,0 +1,15 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    bcrypt (3.1.11)
+    puma (3.10.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  bcrypt
+  puma
+
+BUNDLED WITH
+   1.15.4
