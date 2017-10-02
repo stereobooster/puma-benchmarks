@@ -8,6 +8,8 @@
 
 * [Vegeta](https://github.com/tsenart/vegeta)
 
+* gnuplot
+
 ## How To Build The Virtual Machine
 
 Building the virtual machine is this easy:
@@ -27,9 +29,15 @@ After the installation has finished, you can access the virtual machine with
 
 Port 3000 in the host computer is forwarded to port 3000 in the virtual machine. Thus, applications running in the virtual machine can be accessed via localhost:3000 in the host computer. Be sure the web server is bound to the IP 0.0.0.0, instead of 127.0.0.1, so it can access all interfaces:
 
-    sudo /usr/sbin/nginx -c /vagrant/benchmark/nginx.conf
-    bundle exec puma -C puma-config.rb
-    bundle exec unicorn -c unicorn-config.rb
+    ubuntu@puma-benchmarks:~$ sudo /usr/sbin/nginx -c /vagrant/benchmark/nginx.conf
+    ubuntu@puma-benchmarks:~$ cd /vagrant/benchmark
+    ubuntu@puma-benchmarks:~$ bundle exec puma -C puma-config.rb
+    host $ echo "GET http://localhost:3000/puma/random" | ./vegeta attack -timeout=61s -duration=300s -rate=32 -workers=32 > results.bin
+    host $ cat results.bin | ./vegeta report -reporter=plot > plot.html && open plot.html
+    host $ gnuplot < time.gnuplot  > report/time.png && open report/time.png
+    ubuntu@puma-benchmarks:~$ bundle exec unicorn -c unicorn-config.rb
+    host $ cat results.bin | ./vegeta report -reporter=plot > plot.html && open plot.html
+    host $ gnuplot < time.gnuplot  > report/time.png && open report/time.png
 
 ## What's In The Box
 
@@ -41,8 +49,6 @@ Port 3000 in the host computer is forwarded to port 3000 in the virtual machine.
 
 * Bundler
 
-* SQLite3
-
 ## Recommended Workflow
 
 The recommended workflow is
@@ -50,12 +56,6 @@ The recommended workflow is
 * edit in the host computer and
 
 * test within the virtual machine.
-
-```
-echo "GET http://localhost:3000/unicorn/random" | ./vegeta attack -timeout=61s -duration=30s -rate=100 -workers=100 > results.bin
-cat results.bin | ./vegeta report -reporter=plot > plot.html
-open plot.html
-```
 
 Just clone your Rails fork into the puma-benchmarks directory on the host computer:
 

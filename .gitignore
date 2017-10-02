@@ -1,2 +1,4 @@
 *.log
 .vagrant
+report/*.log
+report/*.png

@@ -30,7 +30,6 @@ echo installing Bundler
 gem install bundler -N >/dev/null 2>&1
 
 install Git git
-install SQLite sqlite3 libsqlite3-dev
 install nginx
 
 # Needed for docs generation.

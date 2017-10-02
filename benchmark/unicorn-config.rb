@@ -8,3 +8,5 @@ listen '/tmp/unicorn.sock', backlog: 1024
 timeout 60
 
 logger  Logger.new('/dev/null')
+
+stdout_path '/vagrant/report/time.log'
