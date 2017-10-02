@@ -1,5 +1,7 @@
 # Puma benchmarks
 
+Reproducible benchmark for https://github.com/puma/puma/issues/1405. Take a look at img folder for example of reports.
+
 ## Requirements
 
 * [VirtualBox](https://www.virtualbox.org)
