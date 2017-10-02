@@ -9,17 +9,36 @@
 # Use an object or block as the rack application. This allows the
 # config file to be the application itself.
 
-require 'bcrypt'
+require "bcrypt"
+require "net/http"
+require "uri"
+
+def simulate(path)
+  case path.gsub("/", "")
+  when "cpu"
+    BCrypt::Password.create("my password #{rand}")
+  when "io"
+    uri = URI.parse("http://google.com/")
+    http = Net::HTTP.new(uri.host, uri.port)
+    response = http.request(Net::HTTP::Get.new(uri.request_uri))
+    response.body
+  when "gc"
+    x = rand(30_000)
+    (0..30_000).map(&:to_s).reduce(:+)[x, x + 10]
+  when "sleep"
+    sleep(0.5)
+  when "random"
+    simulate(%w(cpu io gc sleep).sample)
+  else
+    ""
+  end
+end
 
 app do |env|
-  
   t1 = Time.now.to_f
-  pass = BCrypt::Password.create("my password #{rand}")
-  # sleep 0.05
+  body = simulate(env["REQUEST_PATH"])
   t2 = Time.now.to_f
-
-  body = "Hello, #{pass}! #{t2 - t1}s"
-
+  body = "#{t2-t1}; #{body}"
   [200, { 'Content-Type' => 'text/plain', 'Content-Length' => body.length.to_s }, [body]]
 end
 
