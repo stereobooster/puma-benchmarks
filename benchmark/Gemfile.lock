@@ -2,7 +2,13 @@ GEM
   remote: https://rubygems.org/
   specs:
     bcrypt (3.1.11)
+    kgio (2.11.0)
     puma (3.10.0)
+    rack (2.0.3)
+    raindrops (0.19.0)
+    unicorn (5.3.0)
+      kgio (~> 2.6)
+      raindrops (~> 0.7)
 
 PLATFORMS
   ruby
@@ -10,6 +16,8 @@ PLATFORMS
 DEPENDENCIES
   bcrypt
   puma
+  rack
+  unicorn
 
 BUNDLED WITH
    1.15.4

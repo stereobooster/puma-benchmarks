@@ -9,44 +9,11 @@
 # Use an object or block as the rack application. This allows the
 # config file to be the application itself.
 
-require "bcrypt"
-require "net/http"
-require "uri"
-
-def simulate(path)
-  case path.gsub("/", "")
-  when "cpu"
-    BCrypt::Password.create("my password #{rand}")
-  when "io"
-    uri = URI.parse("http://google.com/")
-    http = Net::HTTP.new(uri.host, uri.port)
-    response = http.request(Net::HTTP::Get.new(uri.request_uri))
-    response.body
-  when "gc"
-    x = rand(30_000)
-    (0..30_000).map(&:to_s).reduce(:+)[x, x + 10]
-  when "sleep"
-    sleep(0.5)
-  when "random"
-    simulate(%w(cpu io gc sleep).sample)
-  else
-    ""
-  end
-end
-
-app do |env|
-  t1 = Time.now.to_f
-  body = simulate(env["REQUEST_PATH"])
-  t2 = Time.now.to_f
-  body = "#{t2-t1}; #{body}"
-  [200, { 'Content-Type' => 'text/plain', 'Content-Length' => body.length.to_s }, [body]]
-end
-
 # Load "path" as a rackup file.
 #
 # The default is "config.ru".
-#
-# rackup '/u/apps/lolcat/config.ru'
+# 
+# rackup 'config.ru'
 
 # Set the environment in which the rack's app will run. The value must be a string.
 #
@@ -89,15 +56,15 @@ environment 'production'
 #
 # The default is "0, 16".
 #
-# threads 0, 16
+threads 16, 16
 
 # Bind the server to "url". "tcp://", "unix://" and "ssl://" are the only
 # accepted protocols.
 #
 # The default is "tcp://0.0.0.0:9292".
 #
-bind 'tcp://0.0.0.0:9292'
-# bind 'unix:///vagrant/benchmark/puma.sock'
+bind 'tcp://0.0.0.0:9292?backlog=1024'
+bind 'unix:///tmp/puma.sock?backlog=1024'
 # bind 'unix:///var/run/puma.sock?umask=0111'
 # bind 'ssl://127.0.0.1:9292?key=path_to_key&cert=path_to_cert'
 
