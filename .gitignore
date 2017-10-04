@@ -2,3 +2,5 @@
 .vagrant
 report/*.log
 report/*.png
+report/*.pid
+report/*.pid.lock

@@ -5,7 +5,10 @@ require 'rack'
 require 'logger'
 
 def simulate(path)
-  case path.gsub('/unicorn/', '').gsub('/puma/', '').gsub('/puma-sock/', '')
+  case path.gsub('/unicorn/', '')
+    .gsub('/puma/', '')
+    .gsub('/puma-sock/', '')
+    .gsub('/passenger/', '')
   when 'cpu'
     BCrypt::Password.create("my password #{rand}")
   when 'io'
@@ -36,7 +39,7 @@ end
 
 app = Proc.new do |env|
   began_at = Time.now.to_f
-  body = simulate(env['REQUEST_PATH'])
+  body = simulate(env['REQUEST_PATH'] || env['REQUEST_URI'])
   end_at = Time.now.to_f
   request_latency = ((began_at - env['HTTP_X_REQUEST_START'].to_f) * 1000).round(3)
   request_duration = (end_at - began_at).round(3)

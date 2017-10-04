@@ -38,7 +38,17 @@ Port 3000 in the host computer is forwarded to port 3000 in the virtual machine.
     host $ cat results.bin | ./vegeta report -reporter=plot > plot.html && open plot.html
     host $ gnuplot < time.gnuplot  > report/time.png && open report/time.png
     ubuntu@puma-benchmarks:~$ bundle exec unicorn -c unicorn-config.rb
+    host $ echo "GET http://localhost:3000/unicorn/random" | ./vegeta attack -timeout=61s -duration=300s -rate=32 -workers=32 > results.bin
     host $ cat results.bin | ./vegeta report -reporter=plot > plot.html && open plot.html
+    host $ gnuplot < time.gnuplot  > report/time.png && open report/time.png
+    ubuntu@puma-benchmarks:~$ bundle exec passenger start
+    host $ echo "GET http://localhost:3000/passenger/random" | ./vegeta attack -timeout=61s -duration=300s -rate=32 -workers=32 > results.bin
+    host $ cat results.bin | ./vegeta report -reporter=plot > plot.html && open plot.html
+    host $ sed -i .bak 's/App .* stdout: //g' report/time.log
+    host $ sed -i .bak '/alert/ d' report/time.log
+    host $ sed -i .bak '/crit/ d' report/time.log
+    host $ sed -i .bak '/error/ d' report/time.log
+    host $ sed -i .bak '1,24d' report/time.log
     host $ gnuplot < time.gnuplot  > report/time.png && open report/time.png
 
 ## What's In The Box

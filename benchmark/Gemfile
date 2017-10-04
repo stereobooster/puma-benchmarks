@@ -8,3 +8,4 @@ gem "bcrypt"
 
 gem "puma"
 gem "unicorn"
+gem "passenger"

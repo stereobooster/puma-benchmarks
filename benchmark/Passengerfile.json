@@ -1,0 +1,10 @@
+{
+    "port": "9292",
+    "app_type": "rack",
+    "max_pool_size": 16,
+    "min_instances": 16,
+    "environment": "production",
+    "log_file": "/vagrant/report/time.log",
+    "pid_file": "/vagrant/report/passenger.pid",
+    "max_request_queue_size": 1024
+}
